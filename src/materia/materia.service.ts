@@ -19,4 +19,12 @@ export class MateriaService {
         );
     }
 
+    async delete(id) {
+        return this.prisma.materias.delete({
+            where: {
+                id
+            }
+        })
+    }
+
 }
