@@ -11,11 +11,6 @@ export class MateriaController {
         return this.materia.readAll(aluno_id)
     }
 
-    @Post('/aluno')
-    async createAluno(@Body() { name, password }) {
-        return this.materia.createAluno({ name, password })
-    }
-
     @Post('/materias')
     async createMateria(@Body() { aluno_id, nome, horas, faltas }) {
         return this.materia.createMateira({ aluno_id, nome, horas, faltas })

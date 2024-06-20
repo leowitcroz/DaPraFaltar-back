@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class MateriaService {
 
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(private readonly prisma: PrismaService,
+        ) { }
 
     async readAll({ aluno_id }) {
-
         const aluno = await this.prisma.alunos.findUnique({
             where: {
                 id: Number(aluno_id)
@@ -25,17 +26,7 @@ export class MateriaService {
         })
     }
 
-    async createAluno({ name, password }) {
-        return this.prisma.alunos.create(
-            {
-                data: {
-                    nome: name,
-                    password: password
-                }
-            }
-        );
-    }
-
+   
     async createMateira({ aluno_id, nome, horas, faltas }) {
         const aluno = await this.prisma.alunos.findUnique({
             where: {
@@ -58,13 +49,24 @@ export class MateriaService {
 
     }
 
-    // async delete(id) {
-    //     return this.prisma.aluno.delete({
-    //         where: {
-    //             id
-    //         }
-    //     })
-    // }
+    async delete(aluno_id, id) {
+
+        const aluno = await this.prisma.alunos.findUnique({
+            where: {
+                id: Number(aluno_id)
+            }
+        })
+        if (!aluno) {
+            throw new Error(`Aluno com ID ${aluno_id} não encontrado.`);
+        }
+
+        return this.prisma.materias.delete(
+            {
+                where : id
+                
+            }
+        )
+    }
 
     // async update(id, { name, horas, faltas }) {
 
