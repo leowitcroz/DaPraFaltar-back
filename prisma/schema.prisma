@@ -7,11 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model materias {
-  id     Int    @id @default(autoincrement())
-  name   String @db.VarChar(45)
-  horas  String @db.VarChar(45)
-  faltas String @db.VarChar(45)
+model alunos {
+  id       Int        @id @default(autoincrement())
+  nome     String     @db.VarChar(100)
+  password String     @db.VarChar(100)
+  materias materias[]
+}
 
-  @@map("materias")
+model materias {
+  idmaterias Int    @id @default(autoincrement())
+  aluno_id   Int
+  nome       String @db.VarChar(45)
+  horas      String @db.VarChar(45)
+  faltas     String @db.VarChar(45)
+  alunos     alunos @relation(fields: [aluno_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_aluno_materia")
+
+  @@index([aluno_id], map: "fk_aluno_materia_idx")
 }
