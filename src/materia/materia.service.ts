@@ -51,23 +51,24 @@ export class MateriaService {
 
     }
 
-    async delete(aluno_id, id) {
+    async delete(aluno_id,id_) {
 
         const aluno = await this.prisma.alunos.findUnique({
             where: {
-                id: Number(aluno_id)
+                id: aluno_id
             }
         })
         if (!aluno) {
             throw new Error(`Aluno com ID ${aluno_id} não encontrado.`);
         }
 
-        return this.prisma.materias.delete(
-            {
-                where: id
 
+        return this.prisma.materias.delete({
+            where: {
+                aluno_id: aluno.id,
+                idmaterias: id_
             }
-        )
+        })
     }
 
     // async update(id, { name, horas, faltas }) {
