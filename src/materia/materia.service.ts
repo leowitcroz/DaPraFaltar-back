@@ -29,7 +29,7 @@ export class MateriaService {
     }
 
 
-    async createMateira({ aluno_id, nome, horas, faltas }) {
+    async createMateira({nome, horas, faltas }, aluno_id) {
         const aluno = await this.prisma.alunos.findUnique({
             where: {
                 id: Number(aluno_id)

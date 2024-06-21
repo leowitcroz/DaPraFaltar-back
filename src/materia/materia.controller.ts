@@ -9,28 +9,28 @@ export class MateriaController {
 
     constructor(private readonly materia: MateriaService) { }
 
-    
+
     @Get()
     async read(@Aluno() aluno) {
         return this.materia.readAll(aluno.id)
     }
 
-    @Post('/materias')
-    async createMateria(@Body() { aluno_id, nome, horas, faltas }) {
-        return this.materia.createMateira({ aluno_id, nome, horas, faltas })
+    @Post()
+    async createMateria(@Body() { nome, horas, faltas }, @Aluno() aluno) {
+        return this.materia.createMateira({ nome, horas, faltas }, aluno.id)
     }
 
 
     @Post('me')
     async me(@Aluno() aluno) {
-        return {
+        return { 
             aluno: aluno.id
         }
     }
 
     @Delete(':id')
-    async delete(@Aluno() aluno,@Param('id', ParseIntPipe) id) {
-        return this.materia.delete(aluno.id,id);
+    async delete(@Aluno() aluno, @Param('id', ParseIntPipe) id) {
+        return this.materia.delete(aluno.id, id);
     }
 
     // @Patch(':id') 
