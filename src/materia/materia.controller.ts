@@ -1,19 +1,30 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { MateriaService } from './materia.service';
+import { AuthGuard } from '../guard/auth.Guard';
+import { Aluno } from '../decorator/aluno.decorator';
 
 @Controller('materia')
 export class MateriaController {
 
     constructor(private readonly materia: MateriaService) { }
 
+    @UseGuards(AuthGuard)
     @Get() 
-    async read(@Body() aluno_id) {
-        return this.materia.readAll(aluno_id)
+    async read(@Aluno() aluno) {
+        return this.materia.readAll(aluno.id)
     }
 
     @Post('/materias')
     async createMateria(@Body() { aluno_id, nome, horas, faltas }) {
         return this.materia.createMateira({ aluno_id, nome, horas, faltas })
+    }
+
+    
+    @Post('me')
+    async me(@Aluno() aluno){
+        return {
+            aluno: aluno.id
+        }
     }
 
     // @Delete(':id')

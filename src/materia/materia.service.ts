@@ -7,12 +7,14 @@ import { AuthService } from '../auth/auth.service';
 export class MateriaService {
 
     constructor(private readonly prisma: PrismaService,
-        ) { }
+    ) { }
 
-    async readAll({ aluno_id }) {
+    async readAll( aluno_id ) {
+
+
         const aluno = await this.prisma.alunos.findUnique({
             where: {
-                id: Number(aluno_id)
+                id: aluno_id
             }
         })
         if (!aluno) {
@@ -26,7 +28,7 @@ export class MateriaService {
         })
     }
 
-   
+
     async createMateira({ aluno_id, nome, horas, faltas }) {
         const aluno = await this.prisma.alunos.findUnique({
             where: {
@@ -62,8 +64,8 @@ export class MateriaService {
 
         return this.prisma.materias.delete(
             {
-                where : id
-                
+                where: id
+
             }
         )
     }

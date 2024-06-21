@@ -14,7 +14,7 @@ export class AuthService {
     private readonly materia: MateriaService,
     private readonly jwt: JwtService,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   createToken(aluno: alunos) {
     return {
@@ -45,19 +45,37 @@ export class AuthService {
     }
   }
 
-  async login(nome, password) {
-    const aluno = await this.prisma.alunos.findFirst({
-      where: { nome },
-    });
-
-    if(nome != aluno.nome){
-      throw new UnauthorizedException('Email e/ou senha incorretos.')
+  isValidToken(token: string) {
+    try {
+      this.checkToken(token)
+      return true
+    } catch (e) {
+      return false
     }
-    if(password != aluno.password){
+  }
+
+  async login(nome: string, password: string) {
+
+    const aluno = await this.prisma.alunos.findFirst({
+      where: {
+        nome,
+        password
+      }
+    })
+
+    if (!aluno) {
       throw new UnauthorizedException('Email e/ou senha incorretos.')
     }
 
     const token = this.createToken(aluno);
-     return token
+
+    const data = this.checkToken(token.accessToken)
+
+
+    return {
+      data,
+      token
+    }
+
   }
 }
