@@ -11,8 +11,13 @@ export class AuthController {
 
 
     @Post('login')
-    async logIn(@Body() { nome, password }:AuthLogInDTO) {
-        return this.auth.login(nome, password)
+    async logIn(@Body() { email, password }:AuthLogInDTO) {
+        return this.auth.login(email, password)
+    }
+
+    @Post('signin')
+    async signin(@Body() { email, password }:AuthLogInDTO) {
+        return this.auth.signin(email, password)
     }
 
     @UseGuards(AuthGuard)

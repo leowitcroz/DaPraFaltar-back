@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../prisma/prisma.service';
 import { alunos } from '@prisma/client';
-import { MateriaService } from '../materia/materia.service';
+
+import { MateriaService } from '../models/materia/materia.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 
 @Injectable()
@@ -21,7 +22,7 @@ export class AuthService {
       accessToken: this.jwt.sign(
         {
           id: aluno.id,
-          name: aluno.nome,
+          email: aluno.email,
         },
         {
           expiresIn: '7 days',
@@ -54,12 +55,13 @@ export class AuthService {
     }
   }
 
-  async login(nome: string, password: string) {
+  async login(email: string, password: string) {
+
 
     const aluno = await this.prisma.alunos.findFirst({
       where: {
-        nome,
-        password
+        email: email,
+        password: password,
       }
     })
 
@@ -75,6 +77,28 @@ export class AuthService {
     return {
       data,
       token
+    }
+
+  }
+
+  async signin(email:string, password:string){
+
+    const checkandoEmail = await this.prisma.alunos.findFirst({
+      where: {
+        email
+      }
+    })
+
+    if(!checkandoEmail){
+      return await this.prisma.alunos.create({
+        data:{
+          email,
+          password
+        }
+      })
+    }
+    else{
+      throw new UnauthorizedException('Email já existente')
     }
 
   }

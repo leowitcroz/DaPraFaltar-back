@@ -11,8 +11,8 @@ export class AlunoController {
     }
 
     @Post()
-    async createAluno(@Body() { name, password }) {
-        return this.aluno.createAluno({ name, password })
+    async createAluno(@Body() { email, password }) {
+        return this.aluno.createAluno({ email, password })
     }
 
 

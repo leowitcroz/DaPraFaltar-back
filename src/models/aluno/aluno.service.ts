@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class AlunoService {
@@ -8,11 +8,11 @@ export class AlunoService {
     ) { }
 
 
-    async createAluno({ name, password }) {
+    async createAluno({ email, password }) {
         return this.prisma.alunos.create(
             {
                 data: {
-                    nome: name,
+                    email: email,
                     password: password
                 }
             }

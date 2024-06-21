@@ -1,8 +1,7 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, UseGuards } from '@nestjs/common';
 import { MateriaService } from './materia.service';
-import { AuthGuard } from '../guard/auth.Guard';
-import { Aluno } from '../decorator/aluno.decorator';
-
+import { AuthGuard } from '../../guard/auth.Guard';
+import { Aluno } from '../../decorator/aluno.decorator';
 @Controller('materia')
 @UseGuards(AuthGuard)
 export class MateriaController {
