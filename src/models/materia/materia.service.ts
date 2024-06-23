@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { alunos } from '@prisma/client';
 
 @Injectable()
 export class MateriaService {
@@ -7,39 +8,25 @@ export class MateriaService {
     constructor(private readonly prisma: PrismaService,
     ) { }
 
-    async readAll( aluno_id ) {
+    async readAll(aluno_id) {
 
 
-        const aluno = await this.prisma.alunos.findUnique({
-            where: {
-                id: aluno_id
-            }
-        })
-        if (!aluno) {
-            throw new Error(`Aluno com ID ${aluno_id} não encontrado.`);
-        }
+        const aluno = this.findAluno(aluno_id);
 
         return this.prisma.materias.findMany({
             where: {
-                aluno_id: aluno.id
+                aluno_id: (await aluno).id
             }
         })
     }
 
 
-    async createMateira({nome, horas, faltas }, aluno_id) {
-        const aluno = await this.prisma.alunos.findUnique({
-            where: {
-                id: Number(aluno_id)
-            }
-        })
-        if (!aluno) {
-            throw new Error(`Aluno com ID ${aluno_id} não encontrado.`);
-        }
+    async createMateira({ nome, horas, faltas }, aluno_id) {
+        const aluno = this.findAluno(aluno_id)
 
         return await this.prisma.materias.create({
             data: {
-                aluno_id: aluno.id,
+                aluno_id: (await aluno).id,
                 nome: nome,
                 horas: horas,
                 faltas: faltas,
@@ -49,8 +36,19 @@ export class MateriaService {
 
     }
 
-    async delete(aluno_id,id_) {
+    async delete(aluno_id, id_) {
 
+        const aluno = this.findAluno(aluno_id);
+
+        return this.prisma.materias.delete({
+            where: {
+                aluno_id: (await aluno).id,
+                idmaterias: id_
+            }
+        })
+    }
+
+    async findAluno(aluno_id): Promise<alunos> {
         const aluno = await this.prisma.alunos.findUnique({
             where: {
                 id: aluno_id
@@ -59,14 +57,9 @@ export class MateriaService {
         if (!aluno) {
             throw new Error(`Aluno com ID ${aluno_id} não encontrado.`);
         }
-
-
-        return this.prisma.materias.delete({
-            where: {
-                aluno_id: aluno.id,
-                idmaterias: id_
-            }
-        })
+        else {
+            return aluno;
+        }
     }
 
     // async update(id, { name, horas, faltas }) {
