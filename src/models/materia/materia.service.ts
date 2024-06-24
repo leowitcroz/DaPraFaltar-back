@@ -62,27 +62,30 @@ export class MateriaService {
         }
     }
 
-    // async update(id, { name, horas, faltas }) {
+    async update(id_materia, aluno_id, { nome, horas, faltas }) {
 
-    //     const data: any = {}
+        const aluno = this.findAluno(aluno_id)
 
-    //     if (name) {
-    //         data.name = name;
-    //     }
-    //     if (horas) {
-    //         data.horas = horas
-    //     }
-    //     if (faltas) {
-    //         data.faltas = faltas
-    //     }
+        const data: any = {}
 
-    //     return this.prisma.aluno.update({
-    //         data,
-    //         where: {
-    //             id
-    //         },
+        if (nome) {
+            data.nome = nome;
+        }
+        if (horas) {
+            data.horas = horas
+        }
+        if (faltas) {
+            data.faltas = faltas
+        }
 
-    //     })
-    // }
+        return this.prisma.materias.update({
+            data,
+            where: {
+                aluno_id: (await aluno).id,
+                idmaterias: id_materia,
+            },
+
+        })
+    }
 
 }

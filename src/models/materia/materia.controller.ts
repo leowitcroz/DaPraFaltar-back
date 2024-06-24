@@ -22,7 +22,7 @@ export class MateriaController {
 
     @Post('me')
     async me(@Aluno() aluno) {
-        return { 
+        return {
             aluno: aluno.id
         }
     }
@@ -32,10 +32,10 @@ export class MateriaController {
         return this.materia.delete(aluno.id, id);
     }
 
-    // @Patch(':id') 
-    // async update(@Param('id', ParseIntPipe) id, @Body() { name, horas, faltas }) {
-    //     return this.materia.update(id, { name, horas, faltas })
-    // }
+    @Patch(':id')
+    async update(@Param('id', ParseIntPipe) id_materia, @Body() { nome, horas, faltas }, @Aluno() aluno) {
+        return this.materia.update(id_materia, aluno.id, { nome, horas, faltas })
+    }
 
 
 } 
